@@ -39,6 +39,15 @@ public class ThemeColor
                 key.SetValue("SystemUsesLightTheme", isLight ? 1 : 0, RegistryValueKind.DWord);
             }
         }
+        
+        using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", true))
+        {
+            if (key != null)
+            {
+                // Set AccentColorMenu to 0 (or you can customize the value)
+                key.SetValue("AccentColorMenu", isLight? 1: 0, RegistryValueKind.DWord);
+            }
+        }
     }
 
     private bool CurrentThemeIsLight()
