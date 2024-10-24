@@ -1,5 +1,6 @@
 ﻿<Application x:Class="DarkModeSwitcher.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DarkModeSwitcher">
+             xmlns:local="clr-namespace:DarkModeSwitcher"
+             ShutdownMode="OnExplicitShutdown">
 </Application>

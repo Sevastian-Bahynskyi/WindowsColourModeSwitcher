@@ -12,16 +12,36 @@
 
     <ItemGroup>
       <Folder Include="bin\Debug\net8.0-windows\" />
+      <Folder Include="bin\Release\net8.0-windows\" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="bin\Debug\net8.0-windows\icons\moon.png" />
+      <None Include="bin\Release\net8.0-windows\icons\full_moon.ico" />
+      <None Include="bin\Release\net8.0-windows\icons\moon.ico" />
+      <None Include="bin\Release\net8.0-windows\icons\moon.png" />
+      <None Remove="bin\Release\net8.0-windows\icons\**" />
+      <None Include="bin\Release\net8.0-windows\icons\sun.ico" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="bin\Debug\net8.0-windows\icons\full_moon.ico" />
       <Content Include="bin\Debug\net8.0-windows\icons\sun.ico" />
       <Content Include="bin\Debug\net8.0-windows\icons\moon.ico" />
+      <Content Include="bin\Release\net8.0-windows\icons\full_moon.ico" />
+      <Content Include="bin\Release\net8.0-windows\icons\moon.ico" />
+      <Content Include="bin\Release\net8.0-windows\icons\sun.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="bin\Release\net8.0-windows\icons\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="bin\Release\net8.0-windows\icons\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Remove="bin\Release\net8.0-windows\icons\**" />
     </ItemGroup>
 
 </Project>

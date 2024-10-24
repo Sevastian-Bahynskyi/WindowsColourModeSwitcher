@@ -1,83 +1,78 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Windows;
+using System.Windows.Forms; // Make sure to reference System.Windows.Forms
 using Microsoft.Win32;
 using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DarkModeSwitcher;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
     private NotifyIcon _notifyIcon;
+    
+    private void Log(string message)
+    {
+        string logFilePath = "application_log.txt"; // Adjust path if needed
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(logFilePath, true))
+            {
+                writer.WriteLine($"{DateTime.Now}: {message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // In case the log writing fails, write to console (visible in Debug mode)
+            Console.WriteLine($"Log Error: {ex.Message}");
+        }
+    }
 
+    
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         CreateSystemTrayIcon();
+        Log("Application started.");
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
     }
-    
-    private bool CurrentThemeIsLight()
-    {
-        using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"))
-        {
-            if (key != null)
-            {
-                // Read the AppsUseLightTheme value
-                object appsUseLightTheme = key.GetValue("AppsUseLightTheme");
-                if (appsUseLightTheme != null && appsUseLightTheme is int)
-                {
-                    return (int)appsUseLightTheme == 1; // 1 indicates light mode
-                }
-            }
-        }
-        return false; // Default to dark mode if not found
-    }
+
 
     private void CreateSystemTrayIcon()
     {
+        var themeColor = new ThemeColor();
+        
         _notifyIcon = new NotifyIcon
         {
-            Icon = new Icon("icons/moon.ico"), // Add an .ico file in your project resources
+            Icon = new Icon("icons/moon.ico"),
             Visible = true,
             Text = "Windows Theme Switcher"
         };
 
-        // Add context menu for tray icon
         var contextMenu = new ContextMenuStrip();
         _notifyIcon.ContextMenuStrip = contextMenu;
-        contextMenu.BackColor = CurrentThemeIsLight() ? Color.White: Color.LightSlateGray;
         
-        _notifyIcon.ContextMenuStrip.Items.Add("Light theme", Image.FromFile("icons/sun.ico"),
-            (sender, args) => SwitchToLightTheme(sender, args, contextMenu));
-        _notifyIcon.ContextMenuStrip.Items.Add("Dark theme", Image.FromFile("icons/full_moon.ico"),
-            (sender, args) => SwitchToDarkTheme(sender, args, contextMenu));
+        contextMenu.Renderer = new CustomToolStripRenderer(themeColor);
+        
+        contextMenu.Items.Add("Light theme", Image.FromFile("icons/sun.ico"),
+            (sender, args) => SwitchToLightTheme(sender, args, themeColor));
+        contextMenu.Items.Add("Dark theme", Image.FromFile("icons/full_moon.ico"),
+            (sender, args) => SwitchToDarkTheme(sender, args, themeColor));
+        
+        
     }
 
-    private void SwitchToDarkTheme(object? sender, EventArgs e, ContextMenuStrip contextMenuStrip)
+    private void SwitchToDarkTheme(object? sender, EventArgs e, ThemeColor themeColor)
     {
-        contextMenuStrip.BackColor = Color.LightSlateGray;
-        SetTheme(false);
+        themeColor.SetDarkTheme();
     }
 
-    private void SwitchToLightTheme(object? sender, EventArgs e, ContextMenuStrip contextMenuStrip)
+    private void SwitchToLightTheme(object? sender, EventArgs e, ThemeColor themeColor)
     {
-        contextMenuStrip.BackColor = Color.White;
-        SetTheme(true);
+        themeColor.SetLightTheme();
     }
 
-    private void SetTheme(bool isLight)
-    {
-        using (RegistryKey key =
-               Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true))
-        {
-            if (key != null)
-            {
-                key.SetValue("AppsUseLightTheme", isLight ? 1 : 0, RegistryValueKind.DWord);
-                key.SetValue("SystemUsesLightTheme", isLight ? 1 : 0, RegistryValueKind.DWord);
-            }
-        }
-    }
+    
 }
