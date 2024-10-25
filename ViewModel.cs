@@ -4,29 +4,52 @@ using Color = System.Drawing.Color;
 
 namespace DarkModeSwitcher;
 
-public class ThemeColor
+public class ViewModel
 {
-    public Color backgroundColor { get; private set; }
-    public Color selectedItemColor { get; private set; }
     private readonly Color LIGHT_COLOR = Color.White;
-    private Color DARK_COLOR = Color.LightSlateGray;
-
-    public ThemeColor()
+    private readonly Color DARK_COLOR = Color.LightSlateGray;
+    public string MOON_ICON_PATH { get; private set; } = "icons/full_moon.ico" ;
+    public string SUN_ICON_PATH { get; private set; } = "icons/sun.ico";
+    public Color BackgroundColor { get; private set; }
+    public Color SelectedItemColor { get; private set; }
+    private string _iconPath;
+    public string IconPath
     {
-        backgroundColor = CurrentThemeIsLight() ? LIGHT_COLOR : DARK_COLOR;
-        selectedItemColor = Color.GreenYellow;
+        get => _iconPath;
+        private set
+        {
+            if (_iconPath != value)
+            {
+                _iconPath = value;
+                OnIconPathChanged();
+            }
+        }
+    }
+    public event EventHandler IconPathChanged;
+    protected virtual void OnIconPathChanged()
+    {
+        IconPathChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public ViewModel()
+    {
+        BackgroundColor = CurrentThemeIsLight() ? LIGHT_COLOR : DARK_COLOR;
+        IconPath = CurrentThemeIsLight()? SUN_ICON_PATH: MOON_ICON_PATH;
+        SelectedItemColor = Color.GreenYellow;
     }
     
     public void SetDarkTheme()
     {
         SetTheme(false);
-        backgroundColor = DARK_COLOR;
+        BackgroundColor = DARK_COLOR;
+        IconPath = MOON_ICON_PATH;
     }
     
     public void SetLightTheme()
     {
         SetTheme(true);
-        backgroundColor = LIGHT_COLOR;
+        BackgroundColor = LIGHT_COLOR;
+        IconPath = SUN_ICON_PATH;
     }
     
     private void SetTheme(bool isLight)
