@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using Microsoft.Win32;
 // Make sure to reference System.Windows.Forms
@@ -10,6 +12,15 @@ public partial class App : Application
 {
     private NotifyIcon _notifyIcon;
     private ViewModel _viewModel;
+    
+    private void LogToFile(string message)
+    {
+        string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+        using (StreamWriter writer = new StreamWriter(logFilePath, true))
+        {
+            writer.WriteLine($"{DateTime.Now}: {message}");
+        }
+    }
 
 
     private void AddToStartup()
@@ -19,9 +30,17 @@ public partial class App : Application
         {
             if (key != null)
             {
-                string? appName = ResourceAssembly.GetName().Name;
-                if (key.GetValue(appName) == null)
-                    key.SetValue(appName, ResourceAssembly.Location);
+                string? appName = Assembly.GetEntryAssembly()?.GetName().Name; // Gets the app name
+                string? currentExePath = Process.GetCurrentProcess().MainModule?.FileName; // Gets the current exe location
+            
+                // Check if the registry key is already set to the correct path
+                object? existingValue = key.GetValue(appName);
+                LogToFile($"Current executable path: {currentExePath}");
+                
+                if (appName != null && currentExePath != null && (existingValue == null || existingValue.ToString() != currentExePath))
+                {
+                    key.SetValue(appName, $"\"{currentExePath}\" AutoStart", RegistryValueKind.String);
+                }
             }
         }
     }
@@ -34,6 +53,8 @@ public partial class App : Application
         _viewModel.IconPathChanged += IconPathChanged;
         CreateSystemTrayIcon();
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        
+        SessionEnding += OnSessionEndingHandler;
     }
 
 
@@ -61,5 +82,10 @@ public partial class App : Application
     private void IconPathChanged(object? sender, EventArgs e)
     {
         _notifyIcon.Icon = new Icon(_viewModel.IconPath);
+    }
+    
+    private void OnSessionEndingHandler(object? sender, SessionEndingCancelEventArgs e)
+    {
+        _notifyIcon.Dispose();
     }
 }
