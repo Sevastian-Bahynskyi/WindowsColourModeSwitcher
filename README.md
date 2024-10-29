@@ -13,21 +13,21 @@ The application updates the system theme and provides a system tray icon for eas
 - Switch between light and dark themes
 - System tray icon with context menu
 - Automatic icon update based on the selected theme
-- Customizable theme colors **(coming soon)**
 
 ## Installation
 
-1. Download the latest release from the [Releases](https://github.com/Sevastian-Bahynskyi/WindowsColourModeSwitcher/releases) page.
-2. Run the installer. **(coming soon)**
+1. Download a zip file from the [Releases](https://github.com/Sevastian-Bahynskyi/WindowsColourModeSwitcher/releases) page.
+2. Unzip the downloaded file.
+3. Put the unzipped folder somewhere on your PC.
 
 ## Usage
 
-1. Run the application.
+1. Run the `WindowsColourModeSwitcher.exe` file.
 2. The application will add itself to system startup.
-3. The application will add itself to the system tray.
-4. Right-click the system tray icon to open the context menu.
-5. Select "Light theme" or "Dark theme" to switch themes.
-6. Select "Customize" to customize the theme colors. **(coming soon)**
+3. Right-click the system tray icon to open the context menu.
+4. Select "Light theme" or "Dark theme" to switch themes.
+
+When everything is done correctly, the application should start automatically with Windows and add itself to the system tray.
 
 ## Contributing
 

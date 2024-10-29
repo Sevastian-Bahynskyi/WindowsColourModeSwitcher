@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Color = System.Drawing.Color;
 
 namespace DarkModeSwitcher;
@@ -26,17 +27,23 @@ public class ViewModel
         }
     }
     public event EventHandler IconPathChanged;
+    
+    
+    public ViewModel()
+    {
+        SUN_ICON_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SUN_ICON_PATH);
+        MOON_ICON_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, MOON_ICON_PATH);
+        
+        BackgroundColor = CurrentThemeIsLight() ? LIGHT_COLOR : DARK_COLOR;
+        IconPath = CurrentThemeIsLight()? SUN_ICON_PATH: MOON_ICON_PATH;
+        SelectedItemColor = Color.GreenYellow;
+    }
     protected virtual void OnIconPathChanged()
     {
         IconPathChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public ViewModel()
-    {
-        BackgroundColor = CurrentThemeIsLight() ? LIGHT_COLOR : DARK_COLOR;
-        IconPath = CurrentThemeIsLight()? SUN_ICON_PATH: MOON_ICON_PATH;
-        SelectedItemColor = Color.GreenYellow;
-    }
+    
     
     public void SetDarkTheme()
     {
