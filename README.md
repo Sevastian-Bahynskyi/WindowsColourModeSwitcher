@@ -27,6 +27,9 @@ The application updates the system theme and provides a system tray icon for eas
 3. Right-click the system tray icon to open the context menu.
 4. Select "Light theme" or "Dark theme" to switch themes.
 
+(While running an executable, you might get a window with a warning, just click `More info` then `Run anyway`.  
+I need to buy a certificate to sign the application, but of course I am not going to do it for open-source project.)
+
 When everything is done correctly, the application should start automatically with Windows and add itself to the system tray.
 
 ## Contributing
