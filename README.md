@@ -43,6 +43,13 @@ When everything is done correctly, the application should start automatically wi
 
 ## Issues
 
+### Known issues
+
+- If change of theme was triggered outside the application, the icon in the system tray will not update.
+  - (didn't figure out how to add a listener for a Windows theme mode registry key)
+- It is very likely that the application will not work on Windows versions older than Windows 10.
+    - (didn't test it on older versions)
+
 If you find any issues, please report them on the [Issues](https://github.com/Sevastian-Bahynskyi/WindowsColourModeSwitcher/issues) page.
 If you have any suggestions or improvements you can contact me by email: `s.bahynskyi@gmail.com`
 
